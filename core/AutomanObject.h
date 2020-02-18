@@ -21,29 +21,22 @@ static vector<AutomanObject*> Tenured;
 
 class AutomanObject {
 public:
-    static vector<AutomanObject*> Roots;
-    AutomanObject* next;
-    AutomanObject* prev;
-
-    //定义回收的代
-    static AutomanObject gen0;//新生代
-    static AutomanObject gen1;//老年代
-    static AutomanObject gen2;//持久代
-
-    int genId;
-
     bool reachable;
 
     virtual ClassType* getClassType() =0;
 
 public:
-    AutomanObject(){
-        //连接本对象到Object的大链表
-        AutomanObjects.push_back(this);
+    int genId;
+public:
+    AutomanObject():genId(0){
+        //设定一个新对象只能从新生代申请
+        Eden.push_back(this);
     }
 
+    virtual ~AutomanObject(){}
+
 public:
-    virtual void gc();
+
     virtual void gc(int curGen);
 };
 

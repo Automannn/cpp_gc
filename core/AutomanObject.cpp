@@ -6,17 +6,6 @@
 #include <windows.h>
 #include <time.h>
 
-/**没有进行代际控制的时候，每次回收都需要对内存中所有的对象进行遍历*/
-void AutomanObject::gc() {
-    reachable = true;
-    ClassType* ptype= this->getClassType();
-    vector<Member*>::iterator it;
-    for (it=ptype->members.begin(); it != ptype->members.end(); it++){
-        AutomanObject* pObj = (AutomanObject*)(((byte*)this)+(*it)->offset);
-        if(pObj->reachable== true) continue;
-        pObj->gc();
-    }
-}
 /**采用代际回收之后的处理*/
 void AutomanObject::gc(int curGen) {
     //当前对象的代际高于回收代际，则终止
@@ -30,30 +19,9 @@ void AutomanObject::gc(int curGen) {
     for (it=ptype->members.begin(); it != ptype->members.end(); it++){
         AutomanObject* pObj = (AutomanObject*)(((byte*)this)+(*it)->offset);
         if(pObj->reachable== true) continue;
-        pObj->gc();
+        pObj->gc(curGen);
     }
 }
-
-//gc线程-> 无分代
-//void GcProcess(){
-//    vector<AutomanObject *>::iterator it;
-//    for (it=AutomanObjects.begin(); it != AutomanObjects.end(); it++){
-//        (*it)->reachable = false;
-//    }
-//    //从所有根对象开始递归标识哪些对象可到达
-//    for (it=AutomanObject::Roots.begin();it!=AutomanObject::Roots.end();it++){
-//        (*it)->gc();
-//    }
-//    //清理不可到达对象
-//    for (it=AutomanObjects.begin();it!=AutomanObjects.end();it++){
-//        if((*it)->reachable == false){
-//            //断开对象链表
-//            AutomanObjects.erase(it);
-//        }
-//    }
-//
-//    //通过分代，
-//}
 /** 代际升级*/
 void RiseGen(vector<AutomanObject*> from,vector<AutomanObject*> to);
 /** 检查空间是否足够*/
@@ -148,6 +116,8 @@ void GcProcessThread(){
 void RiseGen(vector<AutomanObject*> from,vector<AutomanObject*> to){
     vector<AutomanObject *>::iterator it;
     for (it=from.begin(); it != from.end(); it++){
+        //对象的代际属性进行升级
+        (*it)->genId++;
         to.push_back(*it);
         from.erase(it);
     }
