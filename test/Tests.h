@@ -31,7 +31,7 @@ public:
     string name;
     int age;
     AType* aType;
-    BType();
+    BType(AType* atype);
     ~BType();
 public:
     virtual void info();
@@ -43,7 +43,7 @@ public:
 
 public:
     void info();
-    CType();
+    CType(AType* atype);
     ~CType();
 };
 

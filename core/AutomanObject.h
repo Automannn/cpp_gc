@@ -59,6 +59,27 @@ public:
     }
 };
 
+class ObjectFactory {
+public:
+    int count;
+public:
+    void* getObj(AutomanObject* ptr){
+        GcRoot.push_back(ptr);
+        this->count++;
+        return ptr;
+    }
+
+public:
+    ObjectFactory():count(0){}
+
+    ~ObjectFactory(){
+        while (this->count>0){
+            GcRoot.pop_back();
+            this->count--;
+        }
+    }
+};
+
 
 
 

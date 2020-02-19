@@ -14,9 +14,10 @@ void RiseGen(vector<AutomanObject*> from,vector<AutomanObject*> to);
 bool SpaceEnough();
 //gc线程 --> 有 分代
 void GcProcessThread();
-static BType* bb=new BType;
 
 class SmartPtr;
+
+class ObjectFactory;
 
 void popStack(){
     GcRoot.pop_back();
@@ -24,31 +25,30 @@ void popStack(){
 
 
 int main(){
-    SmartPtr p1;  //利用辅助指针 维护 gcRoot
+    ObjectFactory f1;  //利用辅助指针 维护 gcRoot
     //模拟程序申请了堆内存
-    AType* a = new AType;//对分配
-    p1 = a;
+    AType* a = static_cast<AType *>(f1.getObj(new AType));//对分配
     {
-        SmartPtr p2;
-        BType* b = new BType; p2=b;
-        BType* b1 = new BType; p2=b1;
-        BType* b2 = new BType; p2=b2;
-        BType* b3 = new BType; p2=b3;
+        ObjectFactory f2;
+        BType* b = static_cast<BType *>(f2.getObj(new BType(a)));
+        BType* b1 = static_cast<BType *>(f2.getObj(new BType(a)));
+        BType* b2 = static_cast<BType *>(f2.getObj(new BType(a)));
+        BType* b3 = static_cast<BType *>(f2.getObj(new BType(a)));
 
         //作用域内 进行堆申请
         for (int i = 0; i < 10; ++i) {
-            SmartPtr p3;
-            CType* ccc = new CType;
-            p3=ccc;
+            ObjectFactory f3;
+            CType* ccc = static_cast<CType *>(f3.getObj(new CType(a)));
         }
     }
 
-    CType* c = new CType;
-    //模拟维护GcRoot
-
+    CType* c = static_cast<CType *>(f1.getObj(new CType(a)));
     //模拟程序运行了很久
+    //todo:
 
-    //模拟新开程序不足 ->触发gc
+    //模拟程序申请内存不够，触发gc线程
+    //todo:
+
 
 
 }

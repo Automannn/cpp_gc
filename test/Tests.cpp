@@ -17,7 +17,9 @@ ClassType * AType::getClassType() {
     return classType;
 }
 
-BType::BType():name("btype"),age(12){}
+BType::BType(AType* atype):name("btype"),age(12){
+    this->aType = atype;
+}
 BType::~BType() {
     cout<<"this is B type destroy function."<<endl;
 }
@@ -32,7 +34,7 @@ ClassType * BType::getClassType() {
     return classType;
 }
 
-CType::CType(){
+CType::CType(AType* aType1):BType(aType1){
     name = "ctype";
     age=15;
 }
