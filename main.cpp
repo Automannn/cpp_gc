@@ -14,37 +14,41 @@ void RiseGen(vector<AutomanObject*> from,vector<AutomanObject*> to);
 bool SpaceEnough();
 //gc线程 --> 有 分代
 void GcProcessThread();
-class Bclass{
-    int a,b,c,bs;
-    string hh,bb,cc,dd;
-    char* wdg,sdk,dfd;
-public:
-    ~Bclass(){
-        cout<<"destroy b class"<<endl;
-    }
-};
-class TestClass{
-public:
-    TestClass():num(11){
-        cout<<"test class constructor"<<endl;
-    }
+static BType* bb=new BType;
 
-    ~TestClass(){
-        cout<<"test class destroy constructor"<<endl;
-    }
+class SmartPtr;
 
-private:
-    string info;
-    int num;
-    Bclass b,c,d,e,f,g;
-};
+void popStack(){
+    GcRoot.pop_back();
+}
+
 
 int main(){
-    //模拟程序运行很久
+    SmartPtr p1;  //利用辅助指针 维护 gcRoot
+    //模拟程序申请了堆内存
+    AType* a = new AType;//对分配
+    p1 = a;
+    {
+        SmartPtr p2;
+        BType* b = new BType; p2=b;
+        BType* b1 = new BType; p2=b1;
+        BType* b2 = new BType; p2=b2;
+        BType* b3 = new BType; p2=b3;
+
+        //作用域内 进行堆申请
+        for (int i = 0; i < 10; ++i) {
+            SmartPtr p3;
+            CType* ccc = new CType;
+            p3=ccc;
+        }
+    }
+
+    CType* c = new CType;
+    //模拟维护GcRoot
+
+    //模拟程序运行了很久
+
     //模拟新开程序不足 ->触发gc
 
-    {
-        TestClass testClass;
-        cout<<"pause!"<<endl;
-    }
+
 }

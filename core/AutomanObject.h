@@ -39,6 +39,26 @@ public:
     virtual void gc(int curGen);
 };
 
+class SmartPtr{
+public:
+    int count;
+public:
+    SmartPtr& operator=(AutomanObject* ptr){
+        GcRoot.push_back(ptr);
+        this->count++;
+    }
+
+public:
+    SmartPtr():count(0){}
+
+    ~SmartPtr(){
+        while (this->count>0){
+            GcRoot.pop_back();
+            this->count--;
+        }
+    }
+};
+
 
 
 

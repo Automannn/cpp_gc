@@ -17,6 +17,7 @@ public:
     string name;
     int age;
     AType();
+    ~AType();
 
 public:
     void info();
@@ -31,6 +32,7 @@ public:
     int age;
     AType* aType;
     BType();
+    ~BType();
 public:
     virtual void info();
 };
@@ -42,6 +44,7 @@ public:
 public:
     void info();
     CType();
+    ~CType();
 };
 
 
