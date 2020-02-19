@@ -6,5 +6,6 @@ file(GLOB SOURCES "*.cpp")
 file(GLOB HEADERS "*.h")
 
 add_subdirectory(core)
+add_subdirectory(test)
 
 add_executable(automannn_gc ${SOURCES} ${HEADERS})

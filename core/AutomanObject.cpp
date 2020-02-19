@@ -18,7 +18,7 @@ void AutomanObject::gc(int curGen) {
     vector<Member *>::iterator it;
     for (it=ptype->members.begin(); it != ptype->members.end(); it++){
         AutomanObject* pObj = (AutomanObject*)(((byte*)this)+(*it)->offset);
-        if(pObj->reachable== true) continue;
+        if(pObj&&pObj->reachable== true) continue;
         pObj->gc(curGen);
     }
 }
@@ -34,14 +34,14 @@ void GcProcessThread(){
         (*it)->reachable = false;
     }
     //从所有根对象开始递归标识哪些对象可到达
-    for (it=Eden.begin();it!=Eden.end();it++){
+    for (it=GcRoot.begin();it!=GcRoot.end();it++){
         (*it)->gc(0);
     }
     //清理不可到达对象
     for (it=Eden.begin();it!=Eden.end();it++){
         if((*it)->reachable == false&&(*it)->genId<1){
-            //断开对象链表
             delete *it;
+            //断开对象链表
             Eden.erase(it);
         }
     }
@@ -54,7 +54,7 @@ void GcProcessThread(){
         (*it)->reachable = false;
     }
     //从所有根对象开始递归标识哪些对象可到达
-    for (it=Survivor1.begin();it!=Survivor1.end();it++){
+    for (it=GcRoot.begin();it!=GcRoot.end();it++){
         (*it)->gc(1);
     }
     //清理不可到达对象
@@ -74,7 +74,7 @@ void GcProcessThread(){
         (*it)->reachable = false;
     }
     //从所有根对象开始递归标识哪些对象可到达
-    for (it=Survivor2.begin();it!=Survivor2.end();it++){
+    for (it=GcRoot.begin();it!=GcRoot.end();it++){
         (*it)->gc(2);
     }
     //清理不可到达对象
@@ -98,7 +98,7 @@ void GcProcessThread(){
         (*it)->gc(3);
     }
     //清理不可到达对象
-    for (it=Tenured.begin();it!=Tenured.end();it++){
+    for (it=GcRoot.begin();it!=GcRoot.end();it++){
         if((*it)->reachable == false&&(*it)->genId<4){
             //断开对象链表
             delete *it;

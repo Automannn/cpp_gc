@@ -17,14 +17,23 @@ struct ClassType;
 
 struct Member{
     int offset; //成员变量的地址偏移
-    struct ClassType* type; //成员变量的类型
+//    struct ClassType* type; //成员变量的类型
 };
 
 struct ClassType{
-    int getContainNumber();//获得成员外引用对象数量
-    AutomanObject* getContainObject(int i);//获得成员外引用对象
+//    int getContainNumber();//获得成员外引用对象数量
+//    AutomanObject* getContainObject(int i);//获得成员外引用对象
     vector<Member*> members;// 类的成员变量集合
 };
+
+//int ClassType::getContainNumber() {
+//    return members.size();
+//}
+
+//AutomanObject* ClassType::getContainObject(int i) {
+//    if(i>=getContainNumber()) return NULL;
+//    return members[i].type;
+//}
 
 
 #endif //AUTOMANNN_GC_REFLECTION_H

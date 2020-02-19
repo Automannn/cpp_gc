@@ -8,7 +8,7 @@
 #include "Reflection.h"
 using namespace std;
 //object的大链表
-//static vector<AutomanObject*> AutomanObjects;
+static vector<AutomanObject*> GcRoot;
 static vector<AutomanObject*> Eden;
 static vector<AutomanObject*> Survivor1;
 static vector<AutomanObject*> Survivor2;
@@ -36,7 +36,6 @@ public:
     virtual ~AutomanObject(){}
 
 public:
-
     virtual void gc(int curGen);
 };
 
