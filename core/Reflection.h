@@ -16,7 +16,8 @@ class AutomanObject;
 struct ClassType;
 
 struct Member{
-    int offset; //成员变量的地址偏移
+    int offset; //类的成员变量地址偏移
+    void* addr; //存储成员地址
 //    struct ClassType* type; //成员变量的类型
 };
 
